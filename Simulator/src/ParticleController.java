@@ -37,17 +37,15 @@ public class ParticleController {
 
             if (x <= 5 || x >= canvasWidth - 5) {
                 vx *= -1;
-                x = Math.max(5, Math.min(x, canvasWidth - 5));
             }
 
             if (y <= 5 || y >= canvasHeight - 5) {
                 vy *= -1;
-                y = Math.max(5, Math.min(y, canvasHeight - 5));
             }
         }
 
         void draw(Graphics g) {
-            g.fillOval((int) x - 5, (int) y - 5, 10, 10);
+            g.fillOval((int)x - 5, (int)y - 5, 10, 10);
         }
     }
 }

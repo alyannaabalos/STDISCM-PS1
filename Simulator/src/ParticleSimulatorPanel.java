@@ -22,8 +22,6 @@ public class ParticleSimulatorPanel extends JPanel {
         feedbackPanel.add(feedbackScrollPane, BorderLayout.CENTER);
         feedbackPanel.setMaximumSize(feedbackPanel.getPreferredSize());
 
-        drawPanel.setPreferredSize(new Dimension(1280, 720));
-
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.add(feedbackPanel, BorderLayout.NORTH);
         mainPanel.add(drawPanel, BorderLayout.CENTER);
@@ -73,7 +71,23 @@ public class ParticleSimulatorPanel extends JPanel {
     }
 
     private class DrawPanel extends JPanel {
+        @Override
+        public Dimension getPreferredSize() {
+            return new Dimension(1280, 720);
+        }
+
+        @Override
+        public Dimension getMinimumSize() {
+            return getPreferredSize();
+        }
+
+        @Override
+        public Dimension getMaximumSize() {
+            return getPreferredSize();
+        }
+
         public DrawPanel() {
+            super();
             setBackground(Color.PINK);
         }
 

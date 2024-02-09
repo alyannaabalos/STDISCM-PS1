@@ -1,5 +1,6 @@
 import javax.swing.*;
-import java.awt.*;
+import java.awt.Dimension;
+
 
 public class MainScreen extends JFrame {
     public MainScreen() {
@@ -10,10 +11,16 @@ public class MainScreen extends JFrame {
         setTitle("Physics Particle Simulator");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        add(new ParticleSimulatorPanel());
+        ParticleSimulatorPanel particleSimulatorPanel = new ParticleSimulatorPanel();
+        add(particleSimulatorPanel);
 
         pack();
-        setLocationRelativeTo(null);
+
+        // Manual adjustment to ensure the JFrame is large enough
+        setSize(new Dimension(1280 + getInsets().left + getInsets().right, 
+                              720 + getInsets().top + getInsets().bottom + 150));
+        
+        setLocationRelativeTo(null); // Center the window on screen
     }
 
     public static void main(String[] args) {
