@@ -4,7 +4,7 @@ import java.awt.*;
 public class InputFeedbackWindow extends JFrame {
     public InputFeedbackWindow(ParticleController particleController) {
         setTitle("Particle Controls");
-        setSize(600, 100); // Adjust the size as needed
+        setSize(700, 100); // Adjust the size as needed
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Adjust as needed or remove
 
@@ -12,8 +12,7 @@ public class InputFeedbackWindow extends JFrame {
         JLabel feedbackLabel = new JLabel(" ");
         feedbackLabel.setHorizontalAlignment(JLabel.CENTER); // Set the label's text to be centered
 
-        // Use a panel with FlowLayout for the label to ensure it centers within its container
-        JPanel feedbackPanel = new JPanel(new FlowLayout()); 
+        JPanel feedbackPanel = new JPanel(new FlowLayout());
         feedbackPanel.add(feedbackLabel);
 
         JScrollPane feedbackScrollPane = new JScrollPane(feedbackPanel,
@@ -25,8 +24,11 @@ public class InputFeedbackWindow extends JFrame {
         JTextField yInput = new JTextField(5);
         JTextField angleInput = new JTextField(5);
         JTextField velocityInput = new JTextField(5);
-        JButton addButton = new JButton("Add Particle");
+        JTextField numberInput = new JTextField("1", 5); // Set default value to 1 for number of particles
+        JButton addButton = new JButton("Add");
 
+        inputPanel.add(new JLabel("No. of Particles:")); // Label for the number of particles
+        inputPanel.add(numberInput); // Add the input field to the panel
         inputPanel.add(new JLabel("X:"));
         inputPanel.add(xInput);
         inputPanel.add(new JLabel("Y:"));
@@ -43,9 +45,13 @@ public class InputFeedbackWindow extends JFrame {
                 int y = Integer.parseInt(yInput.getText());
                 double angle = Math.toRadians(Double.parseDouble(angleInput.getText()));
                 double velocity = Double.parseDouble(velocityInput.getText());
+                int number = Integer.parseInt(numberInput.getText()); // Get the number of particles to add
 
-                particleController.addParticle(x, y, angle, velocity);
-                feedbackLabel.setText(String.format("Particle added with position (%d, %d), angle: %.1f degrees, velocity: %.1f pixels/second", x, y, Math.toDegrees(angle), velocity));
+                for (int i = 0; i < number; i++) { // Loop to add the specified number of particles
+                    particleController.addParticle(x, y, angle, velocity);
+                }
+
+                feedbackLabel.setText(String.format("%d particles added with position (%d, %d), angle: %.1f degrees, velocity: %.1f pixels/second", number, x, y, Math.toDegrees(angle), velocity));
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Please enter valid numbers for all fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -53,6 +59,6 @@ public class InputFeedbackWindow extends JFrame {
 
         setLayout(new BorderLayout());
         add(inputPanel, BorderLayout.NORTH);
-        add(feedbackScrollPane, BorderLayout.CENTER); // Now the feedbackScrollPane contains the centered feedbackPanel
+        add(feedbackScrollPane, BorderLayout.CENTER);
     }
 }
