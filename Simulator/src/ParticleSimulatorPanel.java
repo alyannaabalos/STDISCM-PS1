@@ -50,6 +50,10 @@ public class ParticleSimulatorPanel extends JPanel {
             g.setColor(Color.BLACK);
 
             particleController.drawParticles(g);
+
+            g.setColor(Color.RED);
+            
+            particleController.drawWalls(g);
         }
     }
 }
