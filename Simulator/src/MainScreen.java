@@ -20,8 +20,8 @@ public class MainScreen extends JFrame {
         // After packing, check if the frame size needs adjustment
         Dimension screenSize = getSize();
         Insets insets = getInsets();
-        int minWidth = 1280 + insets.left + insets.right;
-        int minHeight = 720 + insets.top + insets.bottom + 150; // Adjusted for extra components
+        int minWidth = 100 + insets.left + insets.right;
+        int minHeight = 440 + insets.top + insets.bottom; // Adjusted for extra components
         
         if (screenSize.width < minWidth || screenSize.height < minHeight) {
             setSize(Math.max(minWidth, screenSize.width), Math.max(minHeight, screenSize.height));

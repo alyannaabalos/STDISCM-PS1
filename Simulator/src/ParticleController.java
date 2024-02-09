@@ -1,9 +1,23 @@
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ParticleController {
     private final List<Particle> particles = new ArrayList<>();
+    private BufferedImage particleImage; // Image for particle
+
+    public ParticleController() {
+        // Load the particle image from a file
+        try {
+            particleImage = ImageIO.read(new File("particle.png")); // Adjust the file path as necessary
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void addParticle(int x, int y, double angle, double velocity) {
         particles.add(new Particle(x, y, Math.cos(angle) * velocity, Math.sin(angle) * velocity));
@@ -45,7 +59,11 @@ public class ParticleController {
         }
 
         void draw(Graphics g) {
-            g.fillOval((int)x - 5, (int)y - 5, 10, 10);
+            if (particleImage != null) {
+                int width = 50; // Set width to match the oval's width
+                int height = 50; // Set height to match the oval's height
+                g.drawImage(particleImage, (int)x - width / 2, (int)y - height / 2, width, height, null);
+            }
         }
     }
 }
