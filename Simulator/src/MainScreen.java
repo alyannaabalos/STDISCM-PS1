@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.Dimension;
-
+import java.awt.Insets;
+import java.awt.EventQueue;
 
 public class MainScreen extends JFrame {
     public MainScreen() {
@@ -14,17 +15,24 @@ public class MainScreen extends JFrame {
         ParticleSimulatorPanel particleSimulatorPanel = new ParticleSimulatorPanel();
         add(particleSimulatorPanel);
 
-        pack();
+        pack(); // Adjust the frame size based on its contents
 
-        // Manual adjustment to ensure the JFrame is large enough
-        setSize(new Dimension(1280 + getInsets().left + getInsets().right, 
-                              720 + getInsets().top + getInsets().bottom + 150));
+        // After packing, check if the frame size needs adjustment
+        Dimension screenSize = getSize();
+        Insets insets = getInsets();
+        int minWidth = 1280 + insets.left + insets.right;
+        int minHeight = 720 + insets.top + insets.bottom + 150; // Adjusted for extra components
         
+        if (screenSize.width < minWidth || screenSize.height < minHeight) {
+            setSize(Math.max(minWidth, screenSize.width), Math.max(minHeight, screenSize.height));
+        }
+
         setLocationRelativeTo(null); // Center the window on screen
+        setResizable(false); // Optional: prevent resizing
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
+        EventQueue.invokeLater(() -> {
             MainScreen ms = new MainScreen();
             ms.setVisible(true);
         });
