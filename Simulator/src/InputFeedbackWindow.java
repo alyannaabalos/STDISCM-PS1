@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class InputFeedbackWindow extends JFrame {
     private ParticleController particleController;
@@ -72,16 +75,33 @@ public class InputFeedbackWindow extends JFrame {
                 double angle = Math.toRadians(Double.parseDouble(angleInput.getText()));
                 double velocity = Double.parseDouble(velocityInput.getText());
                 int number = Integer.parseInt(numberInput.getText());
-
-                for (int i = 0; i < number; i++) {
-                    particleController.addParticle(x, y, angle, velocity);
-                }
-
-                feedbackLabel.setText(String.format("%d particles added with position (%d, %d), angle: %.1f degrees, velocity: %.1f pixels/second", number, x, y, Math.toDegrees(angle), velocity));
+        
+                // Define an ActionListener for the Timer that will add particles
+                ActionListener taskPerformer = new ActionListener() {
+                    private int count = 0; // Counter to track the number of particles added
+        
+                    @Override
+                    public void actionPerformed(ActionEvent evt) {
+                        if (count < number) {
+                            particleController.addParticle(x, y, angle, velocity);
+                            feedbackLabel.setText(String.format("%d particles added with position (%d, %d), angle: %.1f degrees, velocity: %.1f pixels/second", count + 1, x, y, Math.toDegrees(angle), velocity));
+                            count++;
+                        } else {
+                            ((Timer)evt.getSource()).stop(); // Stop the timer
+                        }
+                    }
+                };
+        
+                // Create a new Timer that calls the ActionListener every 100 milliseconds
+                Timer timer = new Timer(100, taskPerformer);
+                timer.setInitialDelay(0); // Optional: Start without delay for the first execution
+                timer.start();
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Please enter valid numbers for all fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
             }
         });
+        
+        
 
         return particlePanel;
     }
