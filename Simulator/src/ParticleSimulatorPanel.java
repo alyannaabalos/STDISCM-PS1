@@ -40,18 +40,18 @@ public class ParticleSimulatorPanel extends JPanel {
 
         public DrawPanel() {
             super();
-            setBackground(Color.PINK);
+            setBackground(Color.BLACK);
         }
 
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 
-            g.setColor(Color.BLACK);
+            g.setColor(Color.WHITE);
 
             particleController.drawParticles(g);
 
-            g.setColor(Color.RED);
+            g.setColor(Color.WHITE);
             
             particleController.drawWalls(g);
         }

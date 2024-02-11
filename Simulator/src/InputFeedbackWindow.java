@@ -8,7 +8,7 @@ public class InputFeedbackWindow extends JFrame {
     public InputFeedbackWindow(ParticleController particleController) {
         this.particleController = particleController;
         setTitle("Particle Controls");
-        setSize(700, 200); // Adjust the size as needed
+        setSize(750, 200); // Adjust the size as needed
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
