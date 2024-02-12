@@ -18,15 +18,24 @@ public class MainScreen extends JFrame {
         setResizable(false); // Optional: prevent resizing
     }
 
-    public ParticleController getParticleController() {
-        return particleSimulatorPanel.getParticleController();
+    public WallController getWallController() {
+        return particleSimulatorPanel.getWallController();
+    }
+
+    public ParticleSimulatorPanel getParticleSimulatorPanel() {
+        return particleSimulatorPanel;
     }
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             MainScreen ms = new MainScreen();
             ms.setVisible(true);
-            new InputFeedbackWindow(ms.getParticleController()).setVisible(true); // Create and show the input and feedback window
+            ParticleSimulatorPanel particleSimulatorPanel = ms.getParticleSimulatorPanel();
+            if (particleSimulatorPanel != null) {
+                new InputFeedbackWindow(particleSimulatorPanel.getDynamicThreadManager(), ms.getWallController()).setVisible(true);
+            } else {
+                System.out.println("ParticleSimulatorPanel is null.");
+            }
         });
-    }
+    }    
 }

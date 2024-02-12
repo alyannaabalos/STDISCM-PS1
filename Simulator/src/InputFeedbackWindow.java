@@ -5,11 +5,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class InputFeedbackWindow extends JFrame {
-    private ParticleController particleController;
+    private DynamicThreadManager threadManager;
+    private WallController wallController;
     private JLabel feedbackLabel;
 
-    public InputFeedbackWindow(ParticleController particleController) {
-        this.particleController = particleController;
+    public InputFeedbackWindow(DynamicThreadManager threadManager, WallController wallController) {
+        this.wallController = wallController;
+        this.threadManager = threadManager;
         setTitle("Particle Controls");
         setSize(750, 200); // Adjust the size as needed
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,7 +85,7 @@ public class InputFeedbackWindow extends JFrame {
                     @Override
                     public void actionPerformed(ActionEvent evt) {
                         if (count < number) {
-                            particleController.addParticle(x, y, angle, velocity);
+                            threadManager.addParticle(x, y, angle, velocity);
                             feedbackLabel.setText(String.format("%d particles added with position (%d, %d), angle: %.1f degrees, velocity: %.1f pixels/second", count + 1, x, y, Math.toDegrees(angle), velocity));
                             count++;
                         } else {
@@ -143,7 +145,7 @@ public class InputFeedbackWindow extends JFrame {
                 int y2 = Integer.parseInt(y2Input.getText());
 
                 // Assuming ParticleController has a method addWall to add walls
-                particleController.addWall(x1, y1, x2, y2);
+                wallController.addWall(x1, y1, x2, y2);
 
                 feedbackLabel.setText(String.format("Wall added between (%d, %d) and (%d, %d)", x1, y1, x2, y2));
             } catch (NumberFormatException ex) {

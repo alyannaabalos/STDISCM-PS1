@@ -1,28 +1,99 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+
 
 public class ParticleSimulatorPanel extends JPanel {
     private final DrawPanel drawPanel;
-    private final ParticleController particleController;
+    private final WallController wallController;
+    private final DynamicThreadManager threadManager; // Your dynamic thread manager
+    private Thread gameThread;
+    private volatile boolean running = false;
+    private FPSTracker fpsTracker = new FPSTracker(); // Tracker for FPS
 
     public ParticleSimulatorPanel() {
         drawPanel = new DrawPanel();
-        particleController = new ParticleController();
+        wallController = new WallController();
         setLayout(new BorderLayout());
         add(drawPanel, BorderLayout.CENTER);
-        new Timer(16, e -> updateAndRepaint()).start(); // Roughly 60 FPS
+        threadManager = new DynamicThreadManager(wallController);
+
+        drawPanel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                super.componentResized(e);
+                // Ensures this is only called once
+                drawPanel.removeComponentListener(this);
+                startGameLoop();
+            }
+        });
+    }
+
+    public void startGameLoop() {
+        threadManager.setCanvasSize(drawPanel.getWidth(), drawPanel.getHeight());
+        running = true;
+        gameThread = new Thread(this::gameLoop);
+        gameThread.start();
+    }
+
+    private void gameLoop() {
+        final long targetDelay = 1000 / 60; // Target delay in milliseconds for 60 FPS
+        long lastLoopTime = System.currentTimeMillis();
+
+        while (running) {
+            long now = System.currentTimeMillis();
+            long updateDuration = now - lastLoopTime;
+            lastLoopTime = now;
+            
+            fpsTracker.update(); // Update the FPS tracker
+            if (fpsTracker.getFPS() != 0) {
+                drawPanel.setFps(fpsTracker.getFPS()); // Set FPS for drawing
+                threadManager.checkAndAdjustFPS(fpsTracker.getFPS()); // Adjust thread usage based on FPS
+            }
+
+            updateAndRepaint(); // Update game state and repaint
+
+            long sleepTime = targetDelay - (System.currentTimeMillis() - now);
+            if (sleepTime > 0) {
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    running = false;
+                }
+            }
+        }
     }
 
     private void updateAndRepaint() {
-        particleController.updateParticles(drawPanel.getWidth(), drawPanel.getHeight());
-        drawPanel.repaint();
+        threadManager.updateParticles(); 
+        SwingUtilities.invokeLater(drawPanel::repaint);
     }
 
-    public ParticleController getParticleController() {
-        return particleController;
+    public void stopGameLoop() {
+        running = false;
+        try {
+            gameThread.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public WallController getWallController() {
+        return wallController;
+    }
+
+    public DynamicThreadManager getDynamicThreadManager() {
+        return threadManager;
     }
 
     private class DrawPanel extends JPanel {
+        private double fpsToDisplay = 0;
+
+        public void setFps(double fps) {
+            this.fpsToDisplay = fps;
+        }
+
         @Override
         public Dimension getPreferredSize() {
             return new Dimension(1000, 440);
@@ -49,11 +120,18 @@ public class ParticleSimulatorPanel extends JPanel {
 
             g.setColor(Color.WHITE);
 
-            particleController.drawParticles(g);
+            threadManager.drawParticles(g);
 
             g.setColor(Color.WHITE);
             
-            particleController.drawWalls(g);
+            wallController.drawWalls(g);
+
+            g.setColor(Color.RED); 
+            g.drawString(String.format("FPS: %.2f", fpsToDisplay), 10, 20);
+
+            g.setColor(Color.BLUE); 
+            g.drawString(String.format("Number of Particles: %d", threadManager.getParticleSize()), 100, 20);
+            
         }
     }
 }
