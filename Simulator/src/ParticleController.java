@@ -9,6 +9,7 @@ public class ParticleController {
 
     public void addParticle(int x, int y, double angle, double velocity) {
         particles.add(new Particle(x, y, Math.cos(angle) * velocity, Math.sin(angle) * velocity));
+        
     }
 
     public void addWall(int x1, int y1, int x2, int y2) {
