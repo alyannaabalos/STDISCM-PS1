@@ -1,30 +1,14 @@
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ParticleController {
     private final List<Particle> particles = new ArrayList<>();
     private final List<Wall> walls = new ArrayList<>(); // List to store walls
-    private BufferedImage particleImage; // Image for particle
-
-    public ParticleController() {
-        // Load the particle image from a file
-        try {
-            particleImage = ImageIO.read(getClass().getResourceAsStream("/particle.png"));
-            // particleImage = ImageIO.read(new File("particle.png")); // Adjust the file path as necessary
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void addParticle(int x, int y, double angle, double velocity) {
         particles.add(new Particle(x, y, Math.cos(angle) * velocity, Math.sin(angle) * velocity));
-        
     }
 
     public void addWall(int x1, int y1, int x2, int y2) {
@@ -138,12 +122,6 @@ public class ParticleController {
         }
 
         void draw(Graphics g) {
-            // if (particleImage != null) {
-            //     int width = 50; // Set width to match the oval's width
-            //     int height = 50; // Set height to match the oval's height
-            //     g.drawImage(particleImage, (int)x - width / 2, (int)y - height / 2, width, height, null);
-            // }
-
             g.fillOval((int)x - 5, (int)y - 5, 10, 10);
         }
     }
