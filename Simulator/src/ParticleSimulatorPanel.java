@@ -49,10 +49,11 @@ public class ParticleSimulatorPanel extends JPanel {
             fpsTracker.update(); // Update the FPS tracker
             if (fpsTracker.getFPS() != 0) {
                 drawPanel.setFps(fpsTracker.getFPS()); // Set FPS for drawing
-                threadManager.checkAndAdjustFPS(fpsTracker.getFPS()); // Adjust thread usage based on FPS
+                threadManager.checkAndAdjustFPS(); // Adjust thread usage based on FPS
             }
 
             updateAndRepaint(); // Update game state and repaint
+            threadManager.updateProcessingTimes();
 
             long sleepTime = targetDelay - (System.currentTimeMillis() - now);
             if (sleepTime > 0) {

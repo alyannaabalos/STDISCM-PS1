@@ -9,10 +9,16 @@ public class DynamicThreadManager {
     private ExecutorService executorService = Executors.newCachedThreadPool(); // Manages threads
     private int canvasWidth, canvasHeight;
     private WallController wallController;
+    private int particleSize = 0;
+
     private int targetFPS = 60;
     private int roundRobinIndex = 0;
-    private int particleSize = 0;
-    private int optimalParticlesPerThread = 2000;
+    
+    private long lastAverageProcessingTime = 0;
+    private List<Long> processingTimesHistory = new ArrayList<>();
+    private static final int PROCESSING_TIME_HISTORY_SIZE = 20; 
+
+    private int lastParticleSizeAtThreadAddition = 0;
 
     public DynamicThreadManager(WallController wallController) {
         this.wallController = wallController;
@@ -29,22 +35,45 @@ public class DynamicThreadManager {
         ParticleProcessor processor = new ParticleProcessor(canvasWidth, canvasHeight, wallController);
         processors.add(processor);
         executorService.execute(processor); // Start the processor in a new thread
+        lastParticleSizeAtThreadAddition = particleSize;
     }
 
-    public void checkAndAdjustFPS(int currentFPS) {
-        // Example pseudocode
-        if (shouldAddThread(currentFPS)) {
-            System.err.println(String.format("Number of particles at this time: %d", particleSize));
-            addProcessor();
+    private void addProcessor(List<Particle> particles) {
+        System.err.println(String.format("Width: %d Height: %d", canvasWidth, canvasHeight));
+        ParticleProcessor processor = new ParticleProcessor(canvasWidth, canvasHeight, wallController, particles);
+        processors.add(processor);
+        executorService.execute(processor); 
+        lastParticleSizeAtThreadAddition = particleSize;
+    }
+
+    public void checkAndAdjustFPS() {
+        int count = 1;
+        if (shouldAddThread()) {
+            redistributeParticles();
+
+            for (ParticleProcessor processor : processors) {
+                System.err.println("AFTER:");
+                System.err.println(String.format("thread #: %d particles: %d", count, processor.getParticleController().getParticles().size()));
+
+                count += 1;
+            }
         }
     }
     
-    private boolean shouldAddThread(int currentFPS) {
-        return (currentFPS < targetFPS || 
-        (particleSize / processors.size() > optimalParticlesPerThread)) && 
-        processors.size() < Runtime.getRuntime().availableProcessors() &&
-        particleSize != 0;
-    }
+    private boolean shouldAddThread() {
+        boolean processingTimeIncreasing = false;
+        if (!processingTimesHistory.isEmpty() &&
+            particleSize >= 1000 ) {                // for warm-up
+            long currentAverageProcessingTime = processingTimesHistory.get(processingTimesHistory.size() - 1);
+            processingTimeIncreasing = currentAverageProcessingTime > lastAverageProcessingTime;
+        }
+
+        boolean significantParticleIncrease = particleSize >= lastParticleSizeAtThreadAddition * 1.10;
+
+        return processingTimeIncreasing &&
+            processors.size() < Runtime.getRuntime().availableProcessors() &&
+            particleSize != 0 && significantParticleIncrease;
+    }    
 
     public void addParticle(Particle particle) {
         if (processors.isEmpty()) {
@@ -88,5 +117,52 @@ public class DynamicThreadManager {
         return particleSize;
     }
 
-    // Implement redistribution logic here, based on your needs
+    private void redistributeParticles() {
+        int processorSize = processors.size();
+        List<Particle> newParticles = new ArrayList<>();
+        int count = 1;
+    
+        for (ParticleProcessor processor : processors) {
+            System.err.println("BEFORE:");
+            System.err.println(String.format("thread #: %d particles: %d", count, processor.getParticleController().getParticles().size()));
+
+            List<Particle> allParticles = processor.getParticleController().getParticles();
+            int popCount = allParticles.size() / (processorSize + 1); 
+            
+            List<Particle> particles = popItems(allParticles, popCount);
+            newParticles.addAll(particles);
+
+            count += 1;
+        }
+    
+        addProcessor(newParticles);
+    }
+
+    public static List<Particle> popItems(List<Particle> list, int numberOfItemsToPop) {
+        List<Particle> poppedItems = new ArrayList<>();
+        int size = list.size();
+        int endIndex = Math.min(size, numberOfItemsToPop);
+        for (int i = 0; i < endIndex; i++) {
+            poppedItems.add(list.remove(0));
+        }
+        return poppedItems;
+    }
+
+    public void updateProcessingTimes() {
+        long totalProcessingTime = 0;
+        for (ParticleProcessor processor : processors) {
+            totalProcessingTime += processor.getLastProcessingTime();
+        }
+        long currentAverageProcessingTime = totalProcessingTime / processors.size();
+    
+        // Update the history
+        processingTimesHistory.add(currentAverageProcessingTime);
+        if (processingTimesHistory.size() > PROCESSING_TIME_HISTORY_SIZE) {
+            processingTimesHistory.remove(0); // Keep the list size fixed
+        }
+    
+        // Update last average processing time based on history
+        lastAverageProcessingTime = processingTimesHistory.stream().mapToLong(Long::longValue).sum() / processingTimesHistory.size();
+    }
+    
 }

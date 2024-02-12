@@ -4,6 +4,7 @@ public class ParticleProcessor implements Runnable {
     private ParticleController particleController;
     private WallController wallController;
     private int canvasWidth, canvasHeight;
+    private long lastProcessingTime = 0;
 
     public ParticleProcessor(int canvasWidth, int canvasHeight, WallController wallController) {
         this.particleController = new ParticleController();
@@ -12,37 +13,23 @@ public class ParticleProcessor implements Runnable {
         this.wallController = wallController;
     }
 
-    @Override
-    public void run() {
-        // Check if particleController is null
-        if (particleController == null) {
-            System.err.println("Error: particleController is null");
-            return;
-        }
-
-        // Check if canvasWidth and canvasHeight are valid
-        if (canvasWidth <= 0 || canvasHeight <= 0) {
-            System.err.println("Error: Invalid canvas dimensions");
-            return;
-        }
-
-        // Check if wallController is null
-        if (wallController == null) {
-            System.err.println("Error: wallController is null");
-            return;
-        }
-
-        // Check if wallController.getWall() returns null
-        List<Wall> walls = wallController.getWall();
-        if (walls == null) {
-            System.err.println("Error: wallController.getWall() returned null");
-            return;
-        }
-
-        // Call particleController.updateParticles() with valid parameters
-        particleController.updateParticles(canvasWidth, canvasHeight, walls);
+    public ParticleProcessor(int canvasWidth, int canvasHeight, WallController wallController, List<Particle> particles) {
+        this.particleController = new ParticleController(particles);
+        this.canvasHeight = canvasHeight;
+        this.canvasWidth = canvasWidth;
+        this.wallController = wallController;
     }
 
+    @Override
+    public void run() {
+        long startTime = System.currentTimeMillis();
+
+        List<Wall> walls = wallController.getWall();
+        particleController.updateParticles(canvasWidth, canvasHeight, walls);
+
+        long endTime = System.currentTimeMillis();
+        lastProcessingTime = endTime - startTime;
+    }
 
     public void addParticle(Particle particle) {
         particleController.addParticle(particle);
@@ -50,5 +37,9 @@ public class ParticleProcessor implements Runnable {
 
     public ParticleController getParticleController() {
         return particleController;
+    }
+
+    public long getLastProcessingTime() {
+        return lastProcessingTime;
     }
 }

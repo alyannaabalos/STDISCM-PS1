@@ -2,15 +2,16 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ParticleController {
-    private List<Particle> particles = new ArrayList<>();
+    private List<Particle> particles = new CopyOnWriteArrayList<>();
 
     public ParticleController() {
     }
 
     public ParticleController(List<Particle> particles) {
-        this.particles = particles;
+        this.particles = new CopyOnWriteArrayList<>(particles);
     }    
 
     public void addParticle(int x, int y, double angle, double velocity) {
@@ -26,6 +27,10 @@ public class ParticleController {
             particle.update(canvasWidth, canvasHeight);
             particle.checkWallCollisions(walls);
         }
+    }
+
+    public List<Particle> getParticles(){
+        return particles;
     }
 
     public void drawParticles(Graphics g) {
