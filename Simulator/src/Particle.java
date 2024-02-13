@@ -3,24 +3,15 @@ import java.util.List;
 import java.awt.geom.Point2D;
 import javax.swing.*;
 import java.awt.*;
-import java.util.concurrent.atomic.AtomicLong;
-
 
 public class Particle {
-    private static final AtomicLong ID_GENERATOR = new AtomicLong(0); // For generating unique IDs
-    private final long id; // Unique identifier for each particle
     double x, y, vx, vy;
 
     public Particle(int x, int y, double vx, double vy) {
-        this.id = ID_GENERATOR.getAndIncrement();
         this.x = x;
         this.y = y;
         this.vx = vx;
         this.vy = vy;
-    }
-
-    public long getId() {
-        return id;
     }
 
     void update(int canvasWidth, int canvasHeight) {
