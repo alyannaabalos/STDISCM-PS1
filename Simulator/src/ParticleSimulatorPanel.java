@@ -93,7 +93,7 @@ public class ParticleSimulatorPanel extends JPanel {
 
         @Override
         public Dimension getPreferredSize() {
-            return new Dimension(1000, 440);
+            return new Dimension(1280, 720);
         }
 
         @Override
