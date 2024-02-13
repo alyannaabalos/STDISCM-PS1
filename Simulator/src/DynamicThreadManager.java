@@ -3,10 +3,13 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 import java.awt.*;
+import java.util.concurrent.ConcurrentHashMap;
+
 
 public class DynamicThreadManager {
-    private List<ParticleProcessor> processors = new ArrayList<>();
-    private ExecutorService executorService = Executors.newCachedThreadPool(); // Manages threads
+    private List<ParticleProcessor> processors = new ArrayList<>(); // Corrected to List for ParticleProcessor instances
+    private ExecutorService executorService = Executors.newCachedThreadPool();
+    private ConcurrentHashMap<Long, Particle> particleMap = new ConcurrentHashMap<>(); // Manage particles
     private int canvasWidth, canvasHeight;
     private WallController wallController;
     private int particleSize = 0;
@@ -76,11 +79,8 @@ public class DynamicThreadManager {
     }    
 
     public void addParticle(Particle particle) {
-        if (processors.isEmpty()) {
-            addProcessor(); 
-        }
-
-        particleSize += 1;
+        particleMap.put(particle.getId(), particle); // Add particle to ConcurrentHashMap
+        particleSize++;
 
         // Add particle in round-robin fashion
         ParticleProcessor selectedProcessor = processors.get(roundRobinIndex);
@@ -108,9 +108,7 @@ public class DynamicThreadManager {
     }
      
     public void drawParticles(Graphics g) {
-        for (ParticleProcessor processor : processors) {
-            processor.getParticleController().drawParticles(g);
-        }
+        particleMap.values().forEach(particle -> particle.draw(g));
     }    
 
     public int getParticleSize(){

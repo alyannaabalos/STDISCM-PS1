@@ -1,42 +1,32 @@
-import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ParticleProcessor implements Runnable {
-    private ParticleController particleController;
+    private ConcurrentHashMap<Long, Particle> particleMap;
     private WallController wallController;
     private int canvasWidth, canvasHeight;
     private long lastProcessingTime = 0;
 
-    public ParticleProcessor(int canvasWidth, int canvasHeight, WallController wallController) {
-        this.particleController = new ParticleController();
-        this.canvasHeight = canvasHeight;
+    // Constructor now accepts a ConcurrentHashMap for particles and the WallController
+    public ParticleProcessor(int canvasWidth, int canvasHeight, WallController wallController, ConcurrentHashMap<Long, Particle> particleMap) {
         this.canvasWidth = canvasWidth;
-        this.wallController = wallController;
-    }
-
-    public ParticleProcessor(int canvasWidth, int canvasHeight, WallController wallController, List<Particle> particles) {
-        this.particleController = new ParticleController(particles);
         this.canvasHeight = canvasHeight;
-        this.canvasWidth = canvasWidth;
         this.wallController = wallController;
+        this.particleMap = particleMap;
     }
 
     @Override
     public void run() {
         long startTime = System.currentTimeMillis();
 
-        List<Wall> walls = wallController.getWall();
-        particleController.updateParticles(canvasWidth, canvasHeight, walls);
+        // Process each particle for updates and collision checks
+        particleMap.forEach((id, particle) -> {
+            particle.update(canvasWidth, canvasHeight); // Update particle position based on its velocity
+            // Assuming the Wall class and its collision method are correctly implemented
+            particle.checkWallCollisions(wallController.getWall()); // Check and handle collisions with walls
+        });
 
         long endTime = System.currentTimeMillis();
         lastProcessingTime = endTime - startTime;
-    }
-
-    public void addParticle(Particle particle) {
-        particleController.addParticle(particle);
-    }
-
-    public ParticleController getParticleController() {
-        return particleController;
     }
 
     public long getLastProcessingTime() {
