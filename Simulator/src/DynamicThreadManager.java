@@ -1,11 +1,12 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.awt.*;
 
 public class DynamicThreadManager {
-    private List<ParticleProcessor> processors = new ArrayList<>();
+    private List<ParticleProcessor> processors = new CopyOnWriteArrayList<>();
     private ExecutorService executorService = Executors.newCachedThreadPool(); // Manages threads
     private int canvasWidth, canvasHeight;
     private WallController wallController;
