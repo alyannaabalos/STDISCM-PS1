@@ -7,10 +7,10 @@ import java.awt.event.ComponentEvent;
 public class ParticleSimulatorPanel extends JPanel {
     private final DrawPanel drawPanel;
     private final WallController wallController;
-    private final DynamicThreadManager threadManager; // Your dynamic thread manager
+    private final DynamicThreadManager threadManager; 
     private Thread gameThread;
     private volatile boolean running = false;
-    private FPSTracker fpsTracker = new FPSTracker(); // Tracker for FPS
+    private FPSTracker fpsTracker = new FPSTracker(); 
 
     public ParticleSimulatorPanel() {
         drawPanel = new DrawPanel();
@@ -23,7 +23,6 @@ public class ParticleSimulatorPanel extends JPanel {
             @Override
             public void componentResized(ComponentEvent e) {
                 super.componentResized(e);
-                // Ensures this is only called once
                 drawPanel.removeComponentListener(this);
                 startGameLoop();
             }
@@ -46,13 +45,13 @@ public class ParticleSimulatorPanel extends JPanel {
             long updateDuration = now - lastLoopTime;
             lastLoopTime = now;
             
-            fpsTracker.update(); // Update the FPS tracker
+            fpsTracker.update(); 
             if (fpsTracker.getFPS() != 0) {
-                drawPanel.setFps(fpsTracker.getFPS()); // Set FPS for drawing
-                threadManager.checkAndAdjustFPS(); // Adjust thread usage based on FPS
+                drawPanel.setFps(fpsTracker.getFPS()); 
+                threadManager.checkAndAdjustThread(); 
             }
 
-            updateAndRepaint(); // Update game state and repaint
+            updateAndRepaint(); 
             threadManager.updateProcessingTimes();
 
             long sleepTime = targetDelay - (System.currentTimeMillis() - now);

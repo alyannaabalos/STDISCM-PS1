@@ -12,7 +12,6 @@ public class DynamicThreadManager {
     private WallController wallController;
     private int particleSize = 0;
 
-    private int targetFPS = 60;
     private int roundRobinIndex = 0;
     
     private long lastAverageProcessingTime = 0;
@@ -47,7 +46,7 @@ public class DynamicThreadManager {
         lastParticleSizeAtThreadAddition = particleSize;
     }
 
-    public void checkAndAdjustFPS() {
+    public void checkAndAdjustThread() {
         int count = 1;
         if (shouldAddThread()) {
             redistributeParticles();

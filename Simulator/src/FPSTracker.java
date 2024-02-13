@@ -1,7 +1,7 @@
 public class FPSTracker {
     private long lastTimeCheck; // Store the last time we checked the FPS
     private int frameCount; // Frames counted in the current second
-    private int fps; // The FPS calculation
+    private int fps; 
 
     public FPSTracker() {
         lastTimeCheck = System.currentTimeMillis();
@@ -9,9 +9,6 @@ public class FPSTracker {
         fps = 0;
     }
 
-    /**
-     * Call this method in your game or rendering loop every frame.
-     */
     public void update() {
         long currentTime = System.currentTimeMillis();
         long elapsedTime = currentTime - lastTimeCheck;
@@ -25,10 +22,6 @@ public class FPSTracker {
         }
     }
 
-    /**
-     * Get the current FPS.
-     * @return The calculated FPS.
-     */
     public int getFPS() {
         return fps;
     }

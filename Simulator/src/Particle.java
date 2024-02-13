@@ -1,7 +1,5 @@
-import java.util.*;
 import java.util.List;
 import java.awt.geom.Point2D;
-import javax.swing.*;
 import java.awt.*;
 
 public class Particle {
@@ -54,11 +52,9 @@ public class Particle {
     }
     
     double calculateTOI(Wall wall) {
-        // Define wall vector
         double wx = wall.x2 - wall.x1;
         double wy = wall.y2 - wall.y1;
 
-        // Normal vector to the wall (right-hand normal)
         double nx = -wy;
         double ny = wx;
 
@@ -83,7 +79,9 @@ public class Particle {
         double collisionX = x + ux * t;
         double collisionY = y + uy * t;
         double wallDot = wx * wx + wy * wy; 
-        double collisionDot = (collisionX - wall.x1) * wx + (collisionY - wall.y1) * wy; // Dot product of wall vector and vector from wall start to collision point
+
+        // Dot product of wall vector and vector from wall start to collision point
+        double collisionDot = (collisionX - wall.x1) * wx + (collisionY - wall.y1) * wy; 
 
         // The collision point must be between 0 and wallDot to be on the wall segment
         if (collisionDot < 0 || collisionDot > wallDot) return -1;

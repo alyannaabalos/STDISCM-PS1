@@ -13,7 +13,7 @@ public class InputFeedbackWindow extends JFrame {
         this.wallController = wallController;
         this.threadManager = threadManager;
         setTitle("Particle Controls");
-        setSize(750, 200); // Adjust the size as needed
+        setSize(750, 200); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -78,7 +78,6 @@ public class InputFeedbackWindow extends JFrame {
                 double velocity = Double.parseDouble(velocityInput.getText());
                 int number = Integer.parseInt(numberInput.getText());
         
-                // Define an ActionListener for the Timer that will add particles
                 ActionListener taskPerformer = new ActionListener() {
                     private int count = 0; // Counter to track the number of particles added
         
@@ -94,9 +93,8 @@ public class InputFeedbackWindow extends JFrame {
                     }
                 };
         
-                // Create a new Timer that calls the ActionListener every 100 milliseconds
                 Timer timer = new Timer(100, taskPerformer);
-                timer.setInitialDelay(0); // Optional: Start without delay for the first execution
+                timer.setInitialDelay(0); 
                 timer.start();
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Please enter valid numbers for all fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -144,7 +142,6 @@ public class InputFeedbackWindow extends JFrame {
                 int x2 = Integer.parseInt(x2Input.getText());
                 int y2 = Integer.parseInt(y2Input.getText());
 
-                // Assuming ParticleController has a method addWall to add walls
                 wallController.addWall(x1, y1, x2, y2);
 
                 feedbackLabel.setText(String.format("Wall added between (%d, %d) and (%d, %d)", x1, y1, x2, y2));

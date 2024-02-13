@@ -13,9 +13,9 @@ public class MainScreen extends JFrame {
         setTitle("Physics Particle Simulator");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         add(particleSimulatorPanel);
-        pack(); // Adjust the frame size based on its contents
+        pack(); 
         setLocationRelativeTo(null); // Center the window on screen
-        setResizable(false); // Optional: prevent resizing
+        setResizable(false); // Prevent resizing
     }
 
     public WallController getWallController() {
