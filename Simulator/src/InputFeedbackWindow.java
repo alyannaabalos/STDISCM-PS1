@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.border.EmptyBorder;
 
 public class InputFeedbackWindow extends JFrame {
     private DynamicThreadManager threadManager;
@@ -15,31 +16,44 @@ public class InputFeedbackWindow extends JFrame {
         this.wallController = wallController;
         this.threadManager = threadManager;
         setTitle("Particle Controls");
-        setSize(750, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setSize(750, 400); 
 
-        // Feedback label setup for HTML content
         feedbackLabel = new JLabel("<html></html>");
         feedbackLabel.setHorizontalAlignment(JLabel.CENTER);
+
         JScrollPane feedbackScrollPane = new JScrollPane(feedbackLabel,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        feedbackScrollPane.setPreferredSize(new Dimension(700, 150));
         feedbackScrollPane.setBorder(null);
-        feedbackScrollPane.setPreferredSize(new Dimension(700, 100));
+
+        JLabel feedbackTitle = new JLabel("Output");
+        feedbackTitle.setHorizontalAlignment(JLabel.CENTER);
+        feedbackTitle.setBorder(new EmptyBorder(10, 0, 10, 0)); 
+        feedbackTitle.setOpaque(true); 
+        feedbackTitle.setBackground(Color.WHITE);
+
+        JPanel feedbackPanel = new JPanel(new BorderLayout());
+        feedbackPanel.add(feedbackTitle, BorderLayout.NORTH); // Add title at the top
+        feedbackPanel.add(feedbackScrollPane, BorderLayout.CENTER);
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
-        // Initialize input fields and buttons for particle and wall addition
         mainPanel.add(createParticleInputPanel());
-        mainPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Spacer
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         mainPanel.add(createWallInputPanel());
 
-        setLayout(new BorderLayout());
-        add(mainPanel, BorderLayout.NORTH);
-        add(feedbackScrollPane, BorderLayout.SOUTH); // Add feedback at the bottom of the window
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(mainPanel, BorderLayout.NORTH);
+        getContentPane().add(feedbackPanel, BorderLayout.CENTER); 
+
+        pack();
+        setLocationRelativeTo(null);
     }
+
 
     private JPanel createParticleInputPanel() {
         JPanel particlePanel = new JPanel(new BorderLayout());
@@ -47,7 +61,7 @@ public class InputFeedbackWindow extends JFrame {
         JPanel particleButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
         JLabel particleLabel = new JLabel("Add particles");
-        particleLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0)); // Add some padding to the label
+        particleLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
         JTextField numberInput = new JTextField("1", 5);
         JTextField xInput = new JTextField(5);
