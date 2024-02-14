@@ -17,9 +17,9 @@ public class WallController {
         return this.walls;
     }
 
-    public void drawWalls(Graphics g) {
+    public void drawWalls(Graphics g, int canvasHeight) {
         for (Wall wall : walls) {
-            wall.draw(g);
+            wall.draw(g, canvasHeight);
         }
     }
 }

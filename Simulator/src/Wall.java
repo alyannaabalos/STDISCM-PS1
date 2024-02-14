@@ -10,7 +10,9 @@ public class Wall {
         this.y2 = y2;
     }
 
-    void draw(Graphics g) {
-        g.drawLine(x1, y1, x2, y2);
+    void draw(Graphics g, int canvasHeight) {
+        int invertedY1 = canvasHeight - y1;
+        int invertedY2 = canvasHeight - y2;
+        g.drawLine(x1, invertedY1, x2, invertedY2);
     }
 }

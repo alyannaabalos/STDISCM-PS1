@@ -15,6 +15,7 @@ public class ParticleSimulatorPanel extends JPanel {
     public ParticleSimulatorPanel() {
         drawPanel = new DrawPanel();
         wallController = new WallController();
+
         setLayout(new BorderLayout());
         add(drawPanel, BorderLayout.CENTER);
         threadManager = new DynamicThreadManager(wallController);
@@ -122,7 +123,7 @@ public class ParticleSimulatorPanel extends JPanel {
 
             g.setColor(Color.WHITE);
             
-            wallController.drawWalls(g);
+            wallController.drawWalls(g, canvasHeight);
 
             if (fpsToDisplay >= 60){
                 g.setColor(Color.GREEN); 
