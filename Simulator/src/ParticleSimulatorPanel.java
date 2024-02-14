@@ -123,7 +123,14 @@ public class ParticleSimulatorPanel extends JPanel {
             
             wallController.drawWalls(g);
 
-            g.setColor(Color.RED); 
+            if (fpsToDisplay >= 60){
+                g.setColor(Color.GREEN); 
+            } else if (fpsToDisplay >= 50){
+                g.setColor(Color.ORANGE); 
+            } else {
+                g.setColor(Color.RED); 
+            }
+            
             g.drawString(String.format("FPS: %.2f", fpsToDisplay), 10, 20);
 
             g.setColor(Color.BLUE); 
