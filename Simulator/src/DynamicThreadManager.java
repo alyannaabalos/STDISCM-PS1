@@ -107,9 +107,9 @@ public class DynamicThreadManager {
         }
     }
      
-    public void drawParticles(Graphics g) {
+    public void drawParticles(Graphics g, int canvasHeight) {
         for (ParticleProcessor processor : processors) {
-            processor.getParticleController().drawParticles(g);
+            processor.getParticleController().drawParticles(g, canvasHeight);
         }
     }    
 

@@ -31,9 +31,9 @@ public class ParticleController {
         return particles;
     }
 
-    public void drawParticles(Graphics g) {
+    public void drawParticles(Graphics g, int canvasHeight) {
         for (Particle particle : particles) {
-            particle.draw(g);
+            particle.draw(g, canvasHeight);
         }
     }
 }

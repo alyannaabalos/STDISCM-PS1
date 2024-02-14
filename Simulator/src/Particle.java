@@ -97,7 +97,9 @@ public class Particle {
         return t;
     }
 
-    void draw(Graphics g) {
-        g.fillOval((int)x - 5, (int)y - 5, 10, 10);
+    void draw(Graphics g, int canvasHeight) {
+        // Invert the y-coordinate when drawing the particle.
+        int invertedY = canvasHeight - (int)y - 5;
+        g.fillOval((int)x - 5, invertedY, 10, 10);
     }
 }

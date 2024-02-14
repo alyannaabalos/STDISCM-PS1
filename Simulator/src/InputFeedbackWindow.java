@@ -136,13 +136,14 @@ public class InputFeedbackWindow extends JFrame {
 
     private void updateFeedbackDisplay() {
         StringBuilder feedbackHtml = new StringBuilder("<html>");
-        for (String msg : feedbackMessages) {
-            feedbackHtml.append(msg).append("<br>");
+        // Iterate through the feedbackMessages list in reverse order to add the latest message at the top
+        for (int i = feedbackMessages.size() - 1; i >= 0; i--) {
+            feedbackHtml.append(feedbackMessages.get(i)).append("<br>");
         }
         feedbackHtml.append("</html>");
         feedbackLabel.setText(feedbackHtml.toString());
     }
-
+    
     private JPanel createWallInputPanel() {
     JPanel wallPanel = new JPanel(new BorderLayout());
     JPanel wallInputPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));

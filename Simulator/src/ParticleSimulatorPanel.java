@@ -114,10 +114,11 @@ public class ParticleSimulatorPanel extends JPanel {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
+            int canvasHeight = getHeight();
 
             g.setColor(Color.WHITE);
 
-            threadManager.drawParticles(g);
+            threadManager.drawParticles(g, canvasHeight);
 
             g.setColor(Color.WHITE);
             
