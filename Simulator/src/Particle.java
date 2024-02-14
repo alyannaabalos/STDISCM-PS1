@@ -16,11 +16,19 @@ public class Particle {
         x += vx;
         y += vy;
 
-        if (x <= 5 || x >= canvasWidth - 5) {
+        if (x <= 5) {
+            x = 5;
+            vx *= -1;
+        } else if (x >= canvasWidth - 5) {
+            x = canvasWidth - 5;
             vx *= -1;
         }
 
-        if (y <= 5 || y >= canvasHeight - 5) {
+        if (y <= 5) {
+            y = 5;
+            vy *= -1;
+        } else if (y >= canvasHeight - 5) {
+            y = canvasHeight - 5;
             vy *= -1;
         }
     }
