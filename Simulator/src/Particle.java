@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.geom.Point2D;
 import java.awt.*;
@@ -37,20 +38,33 @@ public class Particle {
         for (Wall wall : walls) {
             double toi = calculateTOI(wall);
             if (toi >= 0 && toi <= 1) {
+                double pastX = this.x;
+                double pastY = this.y;
+
                 // Move to collision point
                 x += vx * toi;
                 y += vy * toi;
 
-                // Reflect the particle's velocity
-                Point2D.Double wallVector = new Point2D.Double(wall.x2 - wall.x1, wall.y2 - wall.y1);
-                Point2D.Double normal = new Point2D.Double(-wallVector.y, wallVector.x);
-                double length = Math.sqrt(normal.x * normal.x + normal.y * normal.y);
-                normal.x /= length;
-                normal.y /= length;
+                List<Wall> nearestWalls = getNearestWalls(this, walls);
+                // System.out.println(nearestWalls.size());
 
-                double dotProduct = vx * normal.x + vy * normal.y;
-                vx -= 2 * dotProduct * normal.x;
-                vy -= 2 * dotProduct * normal.y;
+                if (!nearestWalls.isEmpty() && nearestWalls.size() >= 2) {
+                    vx *= -1;
+                    vy *= -1;
+
+                } else {
+                    // Reflect the particle's velocity
+                    Point2D.Double wallVector = new Point2D.Double(wall.x2 - wall.x1, wall.y2 - wall.y1);
+                    Point2D.Double normal = new Point2D.Double(-wallVector.y, wallVector.x);
+                    double length = Math.sqrt(normal.x * normal.x + normal.y * normal.y);
+                    normal.x /= length;
+                    normal.y /= length;
+
+                    double dotProduct = vx * normal.x + vy * normal.y;
+                    vx -= 2 * dotProduct * normal.x;
+                    vy -= 2 * dotProduct * normal.y; 
+                    
+                }  
 
                 // Adjust position to prevent sticking
                 x += vx * (1 - toi);
@@ -95,6 +109,21 @@ public class Particle {
         if (collisionDot < 0 || collisionDot > wallDot) return -1;
 
         return t;
+    }
+
+    List<Wall> getNearestWalls(Particle particle, List<Wall> walls) {
+        List<Wall> nearestWalls = new ArrayList<>();
+        double velocity = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
+        double angle = Math.atan2(particle.vy, particle.vx);
+    
+        for (Wall wall : walls) {
+            if (Math.abs(wall.x1 - particle.x) <= velocity || Math.abs(wall.x2 - particle.x) <= velocity) {
+                if (Math.abs(wall.y1 - particle.y) <= velocity || Math.abs(wall.y2 - particle.y) <= velocity) {
+                    nearestWalls.add(wall);
+                }
+            }
+        }
+        return nearestWalls;
     }
 
     void draw(Graphics g, int canvasHeight) {
