@@ -91,32 +91,34 @@ public class InputFeedbackWindow extends JFrame {
             try {
                 int x = Integer.parseInt(xInput.getText());
                 int y = Integer.parseInt(yInput.getText());
+                if(x > 1280 || y > 720 || x < 0 || y < 0) {
+                    JOptionPane.showMessageDialog(this, "X value must be between 0 and 1280 and Y value must be between 0 and 720.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 double angle = Math.toRadians(Double.parseDouble(angleInput.getText()));
                 double velocity = Double.parseDouble(velocityInput.getText());
                 int number = Integer.parseInt(numberInput.getText());
                 
-                // Add a unique feedback message for this set of particles
                 String initialFeedback = "Adding " + number + " particles...";
                 feedbackMessages.add(initialFeedback);
-                int feedbackIndex = feedbackMessages.size() - 1; // Index of this feedback message in the list
+                int feedbackIndex = feedbackMessages.size() - 1;
                 updateFeedbackDisplay();
 
                 ActionListener taskPerformer = new ActionListener() {
-                    private int count = 0; // Counter to track the number of particles added
+                    private int count = 0;
 
                     @Override
                     public void actionPerformed(ActionEvent evt) {
                         if (count < number) {
                             threadManager.addParticle(x, y, angle, velocity);
-                            // Update feedback for this set of particles
                             feedbackMessages.set(feedbackIndex, String.format("%d of %d particles added with position (%d, %d), angle: %.1f degrees, velocity: %.1f pixels/second", count + 1, number, x, y, Math.toDegrees(angle), velocity));
                             updateFeedbackDisplay();
                             count++;
                         } else {
-                            // Update final feedback for this set of particles
                             feedbackMessages.set(feedbackIndex, String.format("%d particles added with position (%d, %d), angle: %.1f degrees, velocity: %.1f pixels/second", number, x, y, Math.toDegrees(angle), velocity));
                             updateFeedbackDisplay();
-                            ((Timer)evt.getSource()).stop(); // Stop the timer
+                            ((Timer)evt.getSource()).stop();
                         }
                     }
                 };
@@ -128,9 +130,6 @@ public class InputFeedbackWindow extends JFrame {
                 JOptionPane.showMessageDialog(this, "Please enter valid numbers for all fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
             }
         });
-        
-        
-
         return particlePanel;
     }
 
@@ -180,12 +179,16 @@ public class InputFeedbackWindow extends JFrame {
             int x2 = Integer.parseInt(x2Input.getText());
             int y2 = Integer.parseInt(y2Input.getText());
 
-            wallController.addWall(x1, y1, x2, y2); // Assuming this method exists and adds the wall to your model
+            if(x1 > 1280 || y1 > 720 || x2 > 1280 || y2 > 720 || x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0) {
+                JOptionPane.showMessageDialog(this, "X value must be between 0 and 1280 and Y value must be between 0 and 720.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-            // Construct feedback message for wall addition
+            wallController.addWall(x1, y1, x2, y2);
+
             String wallFeedback = String.format("Wall added between (%d, %d) and (%d, %d)", x1, y1, x2, y2);
-            feedbackMessages.add(wallFeedback); // Add this message to the feedback messages list
-            updateFeedbackDisplay(); // Update the feedback display with the new message
+            feedbackMessages.add(wallFeedback);
+            updateFeedbackDisplay();
 
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Please enter valid numbers for all fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
