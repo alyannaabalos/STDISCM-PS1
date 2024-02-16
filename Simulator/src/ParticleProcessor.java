@@ -4,6 +4,7 @@ public class ParticleProcessor implements Runnable {
     private ParticleController particleController;
     private WallController wallController;
     private int canvasWidth, canvasHeight;
+    private long lastUpdateTime = System.currentTimeMillis(); // Initialize with the current time
     private long lastProcessingTime = 0;
 
     public ParticleProcessor(int canvasWidth, int canvasHeight, WallController wallController) {
@@ -22,13 +23,17 @@ public class ParticleProcessor implements Runnable {
 
     @Override
     public void run() {
-        long startTime = System.currentTimeMillis();
+        // Calculate deltaTime in seconds
+        long currentTime = System.currentTimeMillis();
+        double deltaTime = (currentTime - lastUpdateTime) / 1000.0; // Convert milliseconds to seconds
+        lastUpdateTime = currentTime; // Update lastUpdateTime for the next cycle
 
-        List<Wall> walls = wallController.getWall();
-        particleController.updateParticles(canvasWidth, canvasHeight, walls);
+        List<Wall> walls = wallController.getWall(); // Assuming this method retrieves the current list of walls
+        particleController.updateParticles(deltaTime, canvasWidth, canvasHeight, walls);
 
+        // Optionally, calculate and store the processing time for this update cycle
         long endTime = System.currentTimeMillis();
-        lastProcessingTime = endTime - startTime;
+        lastProcessingTime = endTime - currentTime; // This is the time taken for this cycle in milliseconds
     }
 
     public void addParticle(Particle particle) {

@@ -20,10 +20,10 @@ public class ParticleController {
         particles.add(particle);
     }
 
-    public void updateParticles(int canvasWidth, int canvasHeight, List<Wall> walls) {
+    public void updateParticles(double deltaTime, int canvasWidth, int canvasHeight, List<Wall> walls) {
         for (Particle particle : particles) {
-            particle.update(canvasWidth, canvasHeight);
-            particle.checkWallCollisions(walls);
+            // Now passing deltaTime along with the other required arguments
+            particle.update(deltaTime, canvasWidth, canvasHeight, walls);
         }
     }
 
