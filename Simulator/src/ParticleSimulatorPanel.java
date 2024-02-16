@@ -38,14 +38,14 @@ public class ParticleSimulatorPanel extends JPanel {
     }
 
     private void gameLoop() {
-        final long targetDelay = 1000 / 60; // Target delay for 60 FPS
-        long lastFpsDisplayTime = System.currentTimeMillis(); // Track when FPS was last displayed
+        final long targetDelay = 1000 / 60; 
+        long lastFpsDisplayTime = System.currentTimeMillis(); 
 
         while (running) {
             long now = System.currentTimeMillis();
             
             fpsTracker.update(); 
-            if (now - lastFpsDisplayTime >= 500 && fpsTracker.getFPS() != 0) { // Every 0.5 seconds
+            if (now - lastFpsDisplayTime >= 500 && fpsTracker.getFPS() != 0) {
                 drawPanel.setFps(fpsTracker.getFPS()); 
                 threadManager.checkAndAdjustThread(); 
                 lastFpsDisplayTime = now;

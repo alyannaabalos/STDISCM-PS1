@@ -46,14 +46,12 @@ public class Particle {
                 y += vy * toi;
 
                 List<Wall> nearestWalls = getNearestWalls(this, walls);
-                // System.out.println(nearestWalls.size());
 
                 if (!nearestWalls.isEmpty() && nearestWalls.size() >= 2) {
                     vx *= -1;
                     vy *= -1;
 
                 } else {
-                    // Reflect the particle's velocity
                     Point2D.Double wallVector = new Point2D.Double(wall.x2 - wall.x1, wall.y2 - wall.y1);
                     Point2D.Double normal = new Point2D.Double(-wallVector.y, wallVector.x);
                     double length = Math.sqrt(normal.x * normal.x + normal.y * normal.y);
@@ -66,7 +64,6 @@ public class Particle {
                     
                 }  
 
-                // Adjust position to prevent sticking
                 x += vx * (1 - toi);
                 y += vy * (1 - toi);
             }
@@ -83,12 +80,9 @@ public class Particle {
         double ux = vx;
         double uy = vy;
 
-        // Vector from wall start to particle position
         double px = x - wall.x1;
         double py = y - wall.y1;
 
-        // Need to solve for t where dot((P + tU) - W, N) = 0
-        // t = dot(W - P, N) / dot(U, N)
         double numerator = nx * px + ny * py;
         double denominator = nx * ux + ny * uy;
 
@@ -102,10 +96,8 @@ public class Particle {
         double collisionY = y + uy * t;
         double wallDot = wx * wx + wy * wy; 
 
-        // Dot product of wall vector and vector from wall start to collision point
         double collisionDot = (collisionX - wall.x1) * wx + (collisionY - wall.y1) * wy; 
 
-        // The collision point must be between 0 and wallDot to be on the wall segment
         if (collisionDot < 0 || collisionDot > wallDot) return -1;
 
         return t;
@@ -127,7 +119,6 @@ public class Particle {
     }
 
     void draw(Graphics g, int canvasHeight) {
-        // Invert the y-coordinate when drawing the particle.
         int invertedY = canvasHeight - (int)y - 5;
         g.fillOval((int)x - 5, invertedY, 10, 10);
     }

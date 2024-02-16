@@ -90,12 +90,11 @@ public class DynamicThreadManager {
 
     public void addParticle(int x, int y, double angle, double velocity) {
         if (processors.isEmpty()) {
-            addProcessor(); // Ensure there is at least one processor
+            addProcessor(); 
         }
 
         particleSize += 1;
 
-        // Add particle in round-robin fashion
         ParticleProcessor selectedProcessor = processors.get(roundRobinIndex);
         selectedProcessor.addParticle(new Particle(x, y, Math.cos(angle) * velocity, Math.sin(angle) * velocity));
         roundRobinIndex = (roundRobinIndex + 1) % processors.size();
@@ -155,13 +154,11 @@ public class DynamicThreadManager {
         }
         long currentAverageProcessingTime = totalProcessingTime / processors.size();
     
-        // Update the history
         processingTimesHistory.add(currentAverageProcessingTime);
         if (processingTimesHistory.size() > PROCESSING_TIME_HISTORY_SIZE) {
             processingTimesHistory.remove(0); // Keep the list size fixed
         }
     
-        // Update last average processing time based on history
         lastAverageProcessingTime = processingTimesHistory.stream().mapToLong(Long::longValue).sum() / processingTimesHistory.size();
     }
     

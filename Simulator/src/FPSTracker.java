@@ -1,6 +1,6 @@
 public class FPSTracker {
-    private long lastTimeCheck; // Store the last time we checked the FPS
-    private int frameCount; // Frames counted in the current second
+    private long lastTimeCheck; 
+    private int frameCount; 
     private int fps; 
 
     public FPSTracker() {
@@ -15,9 +15,9 @@ public class FPSTracker {
 
         frameCount++;
 
-        if (elapsedTime >= 1000) { // If a second or more has passed
+        if (elapsedTime >= 1000) {
             fps = frameCount;
-            frameCount = 0; // Reset frame count for the next second
+            frameCount = 0; 
             lastTimeCheck = currentTime;
         }
     }

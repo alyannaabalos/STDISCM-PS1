@@ -14,8 +14,8 @@ public class MainScreen extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         add(particleSimulatorPanel);
         pack(); 
-        setLocationRelativeTo(null); // Center the window on screen
-        setResizable(false); // Prevent resizing
+        setLocationRelativeTo(null);
+        setResizable(false); 
     }
 
     public WallController getWallController() {
