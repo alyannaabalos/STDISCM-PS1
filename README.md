@@ -8,5 +8,5 @@ Multithreading is a feature in a CPU that allows subdividing specific operations
 ## How To Run
 
 To run the application, use the JAR file with the command:
-``` java -jar ParticleSimulator.jar ```
+``` java -jar MainScreen.jar ```
 This command launches the application's GUI, allowing for interactive simulation engagement.
